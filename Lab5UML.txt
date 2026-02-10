@@ -1,0 +1,118 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+title COMP System – Module-Based Computation Architecture
+
+' ========================
+' Shared State (Singleton)
+' ========================
+class ComputationContext <<Singleton>> {
+    - currentValue : double
+    + GetInstance() : ComputationContext
+    + GetValue() : double
+    + SetValue(value : double) : void
+}
+
+note left of ComputationContext
+Stores the shared current value.
+Accessible to all modules
+without parameter passing.
+end note
+
+' ========================
+' Command Abstraction
+' ========================
+abstract class Module {
+    # context : ComputationContext
+    + Execute() : void
+}
+
+note left of Module
+<<Command>>
+Base command interface
+end note
+
+' ========================
+' Template Method Variants
+' ========================
+abstract class InputModule {
+    + Execute() : void
+    # PerformOperation(input : double) : void
+}
+
+abstract class NoInputModule {
+    + Execute() : void
+    # PerformOperation() : void
+}
+
+Module <|-- InputModule
+Module <|-- NoInputModule
+
+note left of InputModule
+<<Template Method>>
+Defines execution flow
+for modules requiring input
+end note
+
+note right of NoInputModule
+<<Template Method>>
+Defines execution flow
+for modules without input
+end note
+
+' ========================
+' Concrete Input Modules
+' ========================
+class Initialize
+class Sum
+class Subtract
+class Product
+class Power
+
+InputModule <|-- Initialize
+InputModule <|-- Sum
+InputModule <|-- Subtract
+InputModule <|-- Product
+InputModule <|-- Power
+
+' ========================
+' Concrete No-Input Module
+' ========================
+class Log
+NoInputModule <|-- Log
+
+' ========================
+' Factory
+' ========================
+class ModuleFactory <<Factory>> {
+    + CreateModule(name : string) : Module
+}
+
+note right of ModuleFactory
+<<Factory Pattern>>
+Creates modules dynamically
+based on modules.txt
+end note
+
+ModuleFactory --> Module
+
+' ========================
+' GUI Layer
+' ========================
+class COMP_GUI {
+    - modules : List<string>
+    + LoadModules() : void
+    + DisplayModules() : void
+    + ExecuteSelectedModule() : void
+}
+
+COMP_GUI --> ModuleFactory
+COMP_GUI --> Module
+
+note right of COMP_GUI
+GUI dynamically loads modules
+from modules.txt and executes
+selected module
+end note
+
+@enduml
