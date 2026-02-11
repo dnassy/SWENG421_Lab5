@@ -1,5 +1,6 @@
 *.vsidx
 /Lab5/obj
-*.sln
-*.csproj
+/Lab5/bin
+
 /Lab5/.vs
+

@@ -1,10 +1,16 @@
-﻿namespace Lab5
+/*
+ * @author TylerW
+ * @author JackD
+ * @author DemetriusN
+ */
+namespace Lab5;
+
+static class Program
 {
-    internal class Program
+    [STAThread]
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        ApplicationConfiguration.Initialize();
+        Application.Run(new COMP_GUI());
     }
 }
