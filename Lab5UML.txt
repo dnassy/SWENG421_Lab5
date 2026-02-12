@@ -8,6 +8,8 @@ title COMP System – Module-Based Computation Architecture
 ' ========================
 class ComputationContext <<Singleton>> {
     - currentValue : double
+    - Instance : ComputationContext
+    - ComputationContext(): void
     + GetInstance() : ComputationContext
     + GetValue() : double
     + SetValue(value : double) : void
@@ -63,11 +65,21 @@ end note
 ' ========================
 ' Concrete Input Modules
 ' ========================
-class Initialize
-class Sum
-class Subtract
-class Product
-class Power
+class Initialize {
+#PerformOperation(input : double) : double
+}
+class Sum{
+#PerformOperation(input : double) : double
+}
+class Subtract{
+#PerformOperation(input : double) : double
+}
+class Product{
+#PerformOperation(input : double) : double
+}
+class Power{
+#PerformOperation(input : double) : double
+}
 
 InputModule <|-- Initialize
 InputModule <|-- Sum
@@ -78,13 +90,16 @@ InputModule <|-- Power
 ' ========================
 ' Concrete No-Input Module
 ' ========================
-class Log
+class Log {
+#PerformOperation(): void
+}
 NoInputModule <|-- Log
 
 ' ========================
 ' Factory
 ' ========================
-class ModuleFactory <<Factory>> {
+class ModuleFactory <<Factory>>{
+-moduleTypes: Dictionary<string,Type>
     + CreateModule(name : string) : Module
 }
 
@@ -108,6 +123,7 @@ class COMP_GUI {
 
 COMP_GUI --> ModuleFactory
 COMP_GUI --> Module
+COMP_GUI "1" o-- "1..*" Module : contains
 
 note right of COMP_GUI
 GUI dynamically loads modules
